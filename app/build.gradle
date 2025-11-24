@@ -1,10 +1,7 @@
-plugins {
-    id 'com.android.application'
-    id 'org.jetbrains.kotlin.android'
-}
+def localProps = new Properties()
+localProps.load(new FileInputStream(rootProject.file("local.properties")))
 
 android {
-    namespace 'com.example.memeapp'
     compileSdk 34
 
     defaultConfig {
@@ -13,43 +10,14 @@ android {
         targetSdk 34
         versionCode 1
         versionName "1.0"
-    }
 
-    buildTypes {
-        release {
-            minifyEnabled false
-            signingConfig null   // 🔥 릴리즈 서명 없음
-        }
-
-        debug {
-            minifyEnabled false
-        }
-    }
-
-    buildFeatures {
-        buildConfig = true
-    }
-}
-
-def openaiKey = project.hasProperty("OPENAI_API_KEY") ? project.property("OPENAI_API_KEY") : ""
-
-android {
-    defaultConfig {
-        buildConfigField "String", "OPENAI_API_KEY", "\"${openaiKey}\""
+        // 🔥 local.properties에서 읽어온 키 삽입
+        buildConfigField "String", "OPENAI_API_KEY", "\"${localProps['OPENAI_API_KEY']}\""
     }
 }
 
 dependencies {
-    implementation "androidx.core:core-ktx:1.12.0"
-    implementation "androidx.appcompat:appcompat:1.6.1"
-    implementation "com.google.android.material:material:1.10.0"
-
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3"
-
-    // Retrofit + Gson
-    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
-    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
-
-    // OkHttp
-    implementation 'com.squareup.okhttp3:okhttp:4.12.0'
+    implementation "com.squareup.okhttp3:okhttp:4.12.0"
+    implementation "com.squareup.retrofit2:retrofit:2.11.0"
+    implementation "com.squareup.retrofit2:converter-gson:2.11.0"
 }
